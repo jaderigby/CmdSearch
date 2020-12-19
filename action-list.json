@@ -1,0 +1,10 @@
+{
+    "alias": "srch",
+    "toolName": "Search",
+    "actions": [
+        {
+            "name": "-",
+            "description": "accepts the following parameters: \n\nname:\t\tstring to search\ninput:\t\talso, string to search\ncontains:\tsearch by contents rather than by name\ndir:\t\tdirectory to search; leave the directory off to search current directory\nhidden:\t\t'true' to include hidden files\n"
+        }
+    ]
+}
