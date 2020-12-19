@@ -25,6 +25,7 @@ def execute(ARGS):
 
 	dir = key_set(argDict, 'dir', False)
 	hidden = key_set(argDict, 'hidden', '')
+	h = key_set(argDict, 'h', '')
 	name = key_set(argDict, 'name', False)
 	pattern = key_set(argDict, 'input', False)
 	contains = key_set(argDict, 'contains', False)
@@ -32,7 +33,7 @@ def execute(ARGS):
 
 	cmdList.append('ag')
 
-	if hidden == 'true':
+	if hidden == 'true' or h == 'true':
 		cmdList.append('--hidden')
 
 	cmdList.append('-o')
