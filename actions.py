@@ -3,6 +3,10 @@ import messages as msg
 import Run
 import Kind
 import Args
+import Log
+import Type
+import Kindx
+import Kindz
 # new imports start here
 
 # settings = helpers.get_settings()
@@ -32,4 +36,16 @@ elif action == "kind":
 
 elif action == "args":
 	Args.execute()
+
+elif action == "log":
+	Log.execute()
+
+elif action == "type":
+	Type.execute()
+
+elif action == "kindx":
+	Kindx.execute()
+
+elif action == "kindz":
+	Kindz.execute()
 # new actions start here

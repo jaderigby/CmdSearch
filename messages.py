@@ -30,7 +30,7 @@ def done():
 ''')
 
 def kinds(ADD_LIST=[]):
-	kindList = ['doc', 'md', 'image', 'svg', 'pdf', 'movie']
+	kindList = ['doc', 'md', 'image', 'svg', 'pdf', 'audio', 'video', 'script']
 	for item in ADD_LIST:
 		kindList.append(item)
 	kindString = ''
@@ -43,6 +43,26 @@ Allows you to search by kind/category of file:
 {}
 '''.format(kindStringFormatted)
 
+def kindx():
+	print('''
+Allows you to search by a regex pattern, like:
+
+kindx:'\.(ts|js)$'
+''')
+
+def kindz():
+	print('''
+Allows you to search a list of file extensions seperated by commas (no spaces), such as: 
+
+kindz:css,html,js
+
+Additionally, you can use the form: 
+
+kindz:'css|html|js'
+
+If you use pipes as seperators, instead of commas, be sure to ecapsulate the entire value in quotes, as seen above.
+''')
+
 def args():
 	print('''
 Arguments:
@@ -54,6 +74,7 @@ Arguments:
 - hidden \tinclude hidden files
 - h \t\tshort version of "hidden"
 - dir \t\tspecify directory to search. When argument is absent, search starts at current directory
+- log \t\tcreate a log from your search results.  Full path required.
 ''')
 
 def types():
@@ -62,8 +83,18 @@ Search by a configured set of file types. For example:
 
 [ css | html | js | tsx ]
 
-For an exhaustive list, do "srch list-types"
 '''
+
+def log():
+	print('''
+Creates a log file from your search results.
+This requires a full path including log file name.
+The log is formatted for markdown, 
+so a markdown file is recommended.
+
+Example: 
+srch - kind:doc log:~/Documents/bacon-bits/demoSearch/log.md
+''')
 
 def example():
 	print('''

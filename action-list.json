@@ -4,7 +4,7 @@
     "actions": [
         {
             "name": "-",
-            "description": "accepts the following parameters:\n\nname:\t\tstring to search\ncontains:\tsearch by contents rather than by name\nkind:\t\tfilter by file kind. For further details, do 'srch kind'\nonly:\t\t'true', short for 'file only', shows just the files; no lines\nhidden:\t\t'true' to include hidden files\nh:\t\t'true', shortened version of 'hidden'\ndir:\t\tdirectory to search; leave the directory off to search current directory\n"
+            "description": "accepts the following parameters:\n\nname:\t\tstring to search\ncontains:\tsearch by contents rather than by name\n\nkind:\t\tfilter by file kind. For further details, do 'srch kind'\nkindx:\t\tlike regular 'kind', but allows you to match by regex pattern, instead\nkindz:\t\tpass in a list of file types seperated by a comma (no space), included in quotes like: 'css,html,js'\n\nonly:\t\t'true', short for 'file only', shows just the files; no lines\nhidden:\t\t'true' to include hidden files\nh:\t\t'true', shortened version of 'hidden'\ndir:\t\tdirectory to search; leave the directory off to search current directory\nlog:\t\tcreates a search log file (full path to file required)\n"
         },
         {
             "name": "args",
@@ -13,6 +13,22 @@
         {
             "name": "kind",
             "description": "Definition for kind"
+        },
+        {
+            "name": "kindx",
+            "description": "Definition for kindx"
+        },
+        {
+            "name": "kindz",
+            "description": "Definition for kindz"
+        },
+        {
+            "name": "log",
+            "description": "definition for log"
+        },
+        {
+            "name": "type",
+            "description": "Definition for type"
         }
     ]
 }

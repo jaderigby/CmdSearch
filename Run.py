@@ -32,24 +32,39 @@ def execute(ARGS):
 	kindObj['doc'] = "\.(doc|docx|pdf|md|mkd|mkdn|mdown|markdown|rtf|txt)$"
 	kindObj['md'] = "\.(md|mkd|mkdn|mdown|markdown)$"
 	kindObj['image'] = "\.(jpeg|jpg|jpe|jif|jfif|jfi|png|gif|webp|tiff|tif|psd|raw|arw|cr2|nrw|k25|bmp|dib|heif|heic|ind|indd|indt|jp2|j2k|jpf|jpx|jpm|mj2)$"
-	kindObj['svg'] = "\.(svg|svgz|eps|pdf|ai)$"
+	kindObj['svg'] = "\.(svg|svgz|eps|ai)$"
 	kindObj['pdf'] = "\.(pdf)$"
-	# audio = 
-	kindObj['movie'] = "\.(webm|mpg|mp2|mpeg|mpe|mpv|ogg|mp4|m4p|m4v|avi|wmv|mov|qt|flv|swf|avchd)$"
+	kindObj['audio'] = "\.(pcm|wav|aiff|mp3|aac|ogg|wma|flac|alac|mpa|aif|m4a|mid|mogg|sdt|flp|aimppl|4mp|mui|l|toc|bun|nbs|sf2|sfk|dm|m4r|ovw|vyf)$"
+	kindObj['video'] = "\.(webm|mpg|mp2|mpeg|mpe|mpv|ogg|mp4|m4p|m4v|avi|wmv|mov|qt|flv|swf|avchd)$"
+	kindObj['script'] = "\.(js|tsx|ts|py|json)$"
+	kindObj['kindx'] = ''
+	kindObj['kindz'] = ''
 	for item in settings['kind']:
 		item = ast.literal_eval(json.dumps(item))
 		kindObj[item['name']] = item['pattern']
 
 	extensionRegex = key_set(argDict, 'kind', False)
+	extensionPattern = key_set(argDict, 'kindx', False)
+	extensionList = key_set(argDict, 'kindz', False)
 
+	if extensionPattern:
+		kindObj['kindx'] = extensionPattern
+		extensionRegex = 'kindx'
+	
+	if extensionList:
+		extensionList = extensionList.replace(',', '|')
+		kindzPattern = r'\.({})$'.format(extensionList)
+		kindObj['kindz'] = kindzPattern
+		extensionRegex = 'kindz'
 
+	extType = key_set(argDict, 'type', False)
 	name = key_set(argDict, 'name', False)
 	contains = key_set(argDict, 'contains', False)
 	hidden = key_set(argDict, 'hidden', '')
 	h = key_set(argDict, 'h', '')
 	only = key_set(argDict, 'only', False)
-	# extType = key_set(argDict, 'type', False)
 	dir = key_set(argDict, 'dir', False)
+	log = key_set(argDict, 'log', False)
 	
 	cmdList = []
 
@@ -97,9 +112,8 @@ def execute(ARGS):
 	if hidden == 'true' or h == 'true':
 		optionList.append('--hidden')
 
-	# if extType:
-	# 	addType = "--" + extType
-	# 	optionList.append(addType)
+	if extType:
+		addType = "--" + extType
 	
 	if hidden:
 		optionList.append('--hidden')
@@ -115,18 +129,15 @@ def execute(ARGS):
 		dir = helpers.run_command_output('pwd', False)[:-1] + '/'
 	dir = re.sub('~/', helpers.root(), dir)
 	suffixList.append(dir)
-
-		# if dir == '~/':
-	# 	dir = dir.replace('~/', helpers.root())
-	# elif not dir:
-	# 	dir = helpers.run_command_output('pwd', False)[:-1] + '/'
-	# cmdList.append(dir)
 	
 	#=======================
 	# Build the command list
 	#=======================
 
 	cmdList.append('ag')
+
+	if extType:
+		cmdList.append(addType)
 
 	for term in termList:
 		cmdList.append(term)
@@ -138,13 +149,7 @@ def execute(ARGS):
 		for item in suffixList:
 			cmdList.append(item)
 
-	
-
-	# print("is list: ")
-	# print(cmdList)
-	# print("")
 	results = helpers.run_command_output_search(cmdList)
-	# print(results)
 
 	pat = re.compile("ERR")
 	for item in results.splitlines():
@@ -154,4 +159,13 @@ def execute(ARGS):
 
 	if results == '':
 		msg.no_results()
+	
+	if log:
+		log = log.replace('~/', helpers.root())
+		if results:
+			str = ''
+			for item in results.splitlines():
+				str += '\n* `{}`'.format(item)
+			helpers.write_file(log, str)
+
 	msg.done()
