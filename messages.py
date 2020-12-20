@@ -29,6 +29,22 @@ def done():
 [ Process Completed ]
 ''')
 
+def kinds():
+	print'''
+Allows you to search by the kind of file: Can be used in combination with "name" or "input", but not with "contains".
+
+[ doc | md | image | svg | pdf | movie ]
+'''
+
+def types():
+	print'''
+Search by a configured set of file types. For example:
+
+[ css | html | js | tsx ]
+
+For an exhaustive list, do "srch list-types"
+'''
+
 def example():
 	print('''
 process working!

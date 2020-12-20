@@ -170,6 +170,8 @@ def run_command_output_search(CMD, option = True):
 		process = subprocess.Popen(CMD, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shellStatus)
 		out, err = process.communicate()
 
+		# print(out)
+
 		if err:
 			print(err)
 		

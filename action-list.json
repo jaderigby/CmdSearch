@@ -4,7 +4,11 @@
     "actions": [
         {
             "name": "-",
-            "description": "accepts the following parameters: \n\nname:\t\tstring to search\ninput:\t\talso, string to search\ncontains:\tsearch by contents rather than by name\ndir:\t\tdirectory to search; leave the directory off to search current directory\nhidden:\t\t'true' to include hidden files\n"
+            "description": "accepts the following parameters:\n\nname:\t\tstring to search\ncontains:\tsearch by contents rather than by name\ndir:\t\tdirectory to search; leave the directory off to search current directory\nkind:\t\tfilter by file kind. For further details, do 'srch kind'\nhidden:\t\t'true' to include hidden files\nh:\t\t'true', shortened version of 'hidden'\n"
+        },
+        {
+            "name": "kind",
+            "description": "Definition for kind"
         }
     ]
 }

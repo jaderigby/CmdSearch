@@ -1,6 +1,7 @@
 import sys, addAction, helpers
 import messages as msg
 import Run
+import Kind
 # new imports start here
 
 # settings = helpers.get_settings()
@@ -24,4 +25,7 @@ elif action == '-profile':
 
 elif action == "-":
 	Run.execute(args)
+
+elif action == "kind":
+	Kind.execute()
 # new actions start here
