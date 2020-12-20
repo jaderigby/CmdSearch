@@ -29,12 +29,32 @@ def done():
 [ Process Completed ]
 ''')
 
-def kinds():
+def kinds(ADD_LIST=[]):
+	kindList = ['doc', 'md', 'image', 'svg', 'pdf', 'movie']
+	for item in ADD_LIST:
+		kindList.append(item)
+	kindString = ''
+	for item in kindList:
+		kindString += item + ' | '
+	kindStringFormatted = '[ {} ]'.format(kindString[:-3])
 	print'''
-Allows you to search by the kind of file: Can be used in combination with "name" or "input", but not with "contains".
+Allows you to search by kind/category of file:
 
-[ doc | md | image | svg | pdf | movie ]
-'''
+{}
+'''.format(kindStringFormatted)
+
+def args():
+	print('''
+Arguments:
+
+- name \t\tsearch files by name (regex pattern). Use double backslash "\\" as escape character
+- contains \tsearch for matching search string inside files
+- kind \t\tfilter matches by kind. 
+- only \t\tshort for "file only", this removes line matches on "contains"
+- hidden \tinclude hidden files
+- h \t\tshort version of "hidden"
+- dir \t\tspecify directory to search. When argument is absent, search starts at current directory
+''')
 
 def types():
 	print'''

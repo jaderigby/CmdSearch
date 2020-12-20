@@ -47,7 +47,8 @@ def execute(ARGS):
 	contains = key_set(argDict, 'contains', False)
 	hidden = key_set(argDict, 'hidden', '')
 	h = key_set(argDict, 'h', '')
-	extType = key_set(argDict, 'type', False)
+	only = key_set(argDict, 'only', False)
+	# extType = key_set(argDict, 'type', False)
 	dir = key_set(argDict, 'dir', False)
 	
 	cmdList = []
@@ -102,6 +103,9 @@ def execute(ARGS):
 	
 	if hidden:
 		optionList.append('--hidden')
+	
+	if only == 'true':
+		optionList.append('-l')
 
 	if dir == '~/':
 		dir = dir.replace('~/', helpers.root())

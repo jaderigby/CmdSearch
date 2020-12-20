@@ -2,6 +2,7 @@ import sys, addAction, helpers
 import messages as msg
 import Run
 import Kind
+import Args
 # new imports start here
 
 # settings = helpers.get_settings()
@@ -28,4 +29,7 @@ elif action == "-":
 
 elif action == "kind":
 	Kind.execute()
+
+elif action == "args":
+	Args.execute()
 # new actions start here
