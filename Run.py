@@ -19,6 +19,8 @@ def execute(ARGS):
 
 	def key_set(DICT, KEY, DEFAULT):
 		if KEY in DICT:
+			if DICT[KEY] == 'true':
+				DICT[KEY] = 't'
 			return DICT[KEY]
 		else:
 			return DEFAULT
@@ -75,7 +77,9 @@ def execute(ARGS):
 	if not contains:
 		if not extensionRegex and name:
 			termList.append('-g')
-			termList.append(name)
+			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
+			sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*\..{{1,15}}'''.format(name)
+			termList.append(sugarized)
 		
 		elif not name and extensionRegex:
 			termList.append('-g')
@@ -84,8 +88,8 @@ def execute(ARGS):
 		
 		elif name and extensionRegex:
 			termList.append('-g')
-			sugarized = '{}.*{}'.format(name, kindObj[extensionRegex])
-			# termList.append(name)
+			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+			sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
 			termList.append(sugarized)
 	
 	elif contains:
@@ -103,13 +107,14 @@ def execute(ARGS):
 
 		elif name and extensionRegex and contains:
 			termList.append('-G')
-			sugarized = '{}.*{}'.format(name, kindObj[extensionRegex])
+			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+			sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}'''.format(name, kindObj[extensionRegex])
 			termList.append(sugarized)
 			termList.append(contains)
 	
 	optionList.append('-o')
 
-	if hidden == 'true' or h == 'true':
+	if hidden == 't' or h == 't':
 		optionList.append('--hidden')
 
 	if extType:
@@ -118,8 +123,12 @@ def execute(ARGS):
 	if hidden:
 		optionList.append('--hidden')
 	
-	if only == 'true':
+	if only == 't':
 		optionList.append('-l')
+	
+	if log:
+		optionList.append('--ignore-dir')
+		optionList.append('cmdsearch-logs')
 
 	if dir == '~/':
 		dir = dir.replace('~/', helpers.root())
@@ -161,11 +170,53 @@ def execute(ARGS):
 		msg.no_results()
 	
 	if log:
-		log = log.replace('~/', helpers.root())
+		from datetime import date, datetime
+		
+		currDate = date.today()
+		currTime = datetime.now()
+		searchQuery = helpers.format_search_query()
+		logPath = helpers.run_command_output('pwd', False)
+		logFile = ''
+		logFormat = 'txt'
+		searchData = ''
+		if log == 'true' or log == 't' or log == 'json' or log == 'md':
+			logFormat = 'md'
+			logFile = 'log.md'
+			logRoot = helpers.run_command_output('pwd', False).replace('\n', '') + '/cmdsearch-logs'
+			helpers.run_command('mkdir -p {}'.format(logRoot), False)
+			if log == 'json':
+				logFormat = 'json'
+				logFile = 'log.json'
+			logPath = logRoot + '/' + logFile
+		else:
+			logFile = log.split('/')[-1]
+			logRoot = log.replace(logFile, '')
+			logRoot = logRoot.replace('cmdsearch-logs/', '')[:-1]
+			helpers.run_command('cd {} && mkdir -p {}'.format(logRoot, 'cmdsearch-logs'), False)
+			logPath = logRoot + 'cmdsearch-logs/' + logFile
 		if results:
-			str = ''
-			for item in results.splitlines():
-				str += '\n* `{}`'.format(item)
-			helpers.write_file(log, str)
+			if logFormat == 'md':
+				searchData = '__Date:__ {}\n'.format(currDate)
+				searchData += '__Time:__ {}\n'.format(currTime.strftime("%H:%M:%S"))
+				searchData += '__Search:__ `{}`\n\n'.format(searchQuery)
+				for item in results.splitlines():
+					searchData += '\n* `{}`'.format(item)
+			elif logFormat == 'json':
+				newObj = {}
+				newObj['date'] = '{}'.format(currDate)
+				newObj['time'] = '{}'.format(currTime.strftime("%H:%M:%S"))
+				newObj['search'] = searchQuery.replace('\n', '')
+				newObj['searchResults'] = []
+				for item in results.splitlines():
+					newObj['searchResults'].append(item)
+				searchData = json.dumps(newObj, indent=4)
+			else:
+				 searchData = results
+
+			logPathFormatted = logPath.replace('\n', '')
+			print((bcolors.OKCYAN + '''
+LOG: {}
+''' + bcolors.ENDC).format(logPathFormatted))
+			helpers.write_file(logPathFormatted, searchData)
 
 	msg.done()

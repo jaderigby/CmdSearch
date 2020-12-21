@@ -179,3 +179,16 @@ def run_command_output_search(CMD, option = True):
 			result = out
 
 	return result
+
+def format_search_query():
+	import sys
+	import re
+	newStr = 'srch'
+	for item in sys.argv[1:]:
+		newStr += ' {}'.format(item)
+	pat = re.compile('dir:')
+	match = re.search(pat, newStr)
+	if not match:
+		newStr += ' dir:{}'.format(run_command_output('pwd', False))
+	return newStr
+		

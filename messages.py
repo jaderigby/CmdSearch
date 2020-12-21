@@ -38,13 +38,17 @@ def kinds(ADD_LIST=[]):
 		kindString += item + ' | '
 	kindStringFormatted = '[ {} ]'.format(kindString[:-3])
 	print'''
+## kind ##
+
 Allows you to search by kind/category of file:
 
 {}
 '''.format(kindStringFormatted)
 
 def kindx():
-	print('''
+	print(r'''
+## kindx ##
+
 Allows you to search by a regex pattern, like:
 
 kindx:'\.(ts|js)$'
@@ -52,6 +56,8 @@ kindx:'\.(ts|js)$'
 
 def kindz():
 	print('''
+## kindz ##
+
 Allows you to search a list of file extensions seperated by commas (no spaces), such as: 
 
 kindz:css,html,js
@@ -87,13 +93,27 @@ Search by a configured set of file types. For example:
 
 def log():
 	print('''
-Creates a log file from your search results.
-This requires a full path including log file name.
-The log is formatted for markdown, 
-so a markdown file is recommended.
+## log ##
 
-Example: 
-srch - kind:doc log:~/Documents/bacon-bits/demoSearch/log.md
+Creates a log file from your search results.
+if no file path is given, it defaults to the current directory.
+
+Alternatively, you can use the shorthand of 'log:t' or 
+'log:true', and it will create a markdown log file for you, 
+in the current directory. In the short form, you can also specify json format, like so:
+
+srch - kind:doc log:json
+
+Example with name only: 
+srch - kind:doc log:logfile.txt
+
+Example using file path:
+srch - kind:doc log:~/Documents/bacon-bits/demoSearch/log.txt
+
+Example using shorthand:
+srch - kind:doc log:t
+
+* The shorthand version will result in a markdown file called 'log.md'
 ''')
 
 def example():
