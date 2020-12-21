@@ -56,10 +56,14 @@ srch - contains:someString dir:~/ h:true
 
 - __name:__ = string to search (as file name)
 - __contains:__ = search contents
-- __dir:__ = specify the root directory to start searching
-- __hidden:__ = 'true', include hidden files
-- __h:__ = shortened version of "hidden"
 - __kind:__ = filter by selected file kind (Options: `srch kind`)
+- __kindx:__ = kind as regex pattern
+- __kindz:__ = can add a list of extensions to include in search (seperated by commans; no spaces):  `srch - kindz:css,html,js`
+- __only:__ = 't|true', show results only, no line numbers
+- __hidden:__ = 't|true', include hidden files
+- __h:__ = 't|true', shortened version of "hidden"
+- __dir:__ = specify the root directory to start searching
+- __log:__ = create a log file of search results
 
 
 
