@@ -5,6 +5,7 @@ settings = helpers.get_settings()
 
 def execute():
 	addToList = []
-	for item in settings['kind']:
-		addToList.append(item['name'])
+	if 'kind' in settings:
+		for item in settings['kind']:
+			addToList.append(item['name'])
 	msg.kinds(addToList)
