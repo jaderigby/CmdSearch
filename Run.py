@@ -29,6 +29,10 @@ def execute(ARGS):
 	# patterns
 	#=========
 
+	fileOnlyPat = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'" ]*'''
+	hiddenFileOnlyPat = '''\/?\.[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*'''
+	hiddenFileSuffixPat = '''[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*'''
+
 	# uses the GitHub flavor of acceptable markdown extensions
 	kindObj = {}
 	kindObj['doc'] = "\.(doc|docx|pdf|md|mkd|mkdn|mdown|markdown|rtf|txt)$"
@@ -78,7 +82,7 @@ def execute(ARGS):
 		if not extensionRegex and name:
 			termList.append('-g')
 			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
-			sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*\..{{1,15}}'''.format(name)
+			sugarized = '''(({FILE_ONLY_PAT}{NAME}{FILE_ONLY_PAT}\..{{1,15}})|({HIDDEN_FILE_ONLY_PAT}{NAME}{HIDDEN_FILE_SUFFIX_PAT}))'''.format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, HIDDEN_FILE_ONLY_PAT= hiddenFileOnlyPat, HIDDEN_FILE_SUFFIX_PAT= hiddenFileSuffixPat)
 			termList.append(sugarized)
 		
 		elif not name and extensionRegex:
@@ -89,7 +93,8 @@ def execute(ARGS):
 		elif name and extensionRegex:
 			termList.append('-g')
 			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
+			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
+			sugarized = '''(({FILE_ONLY_PAT}{NAME}{FILE_ONLY_PAT}{KIND})|({HIDDEN_FILE_ONLY_PAT}{NAME}{HIDDEN_FILE_SUFFIX_PAT}))'''.format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, KIND= kindObj[extensionRegex], HIDDEN_FILE_ONLY_PAT= hiddenFileOnlyPat, HIDDEN_FILE_SUFFIX_PAT= hiddenFileSuffixPat)
 			termList.append(sugarized)
 	
 	elif contains:
@@ -108,7 +113,8 @@ def execute(ARGS):
 		elif name and extensionRegex and contains:
 			termList.append('-G')
 			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}'''.format(name, kindObj[extensionRegex])
+			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}'''.format(name, kindObj[extensionRegex])
+			sugarized = '''(({FILE_ONLY_PAT}{NAME}{FILE_ONLY_PAT}{KIND})|({HIDDEN_FILE_ONLY_PAT}{NAME}{HIDDEN_FILE_SUFFIX_PAT}))'''.format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, KIND= kindObj[extensionRegex], HIDDEN_FILE_ONLY_PAT= hiddenFileOnlyPat, HIDDEN_FILE_SUFFIX_PAT= hiddenFileSuffixPat)
 			termList.append(sugarized)
 			termList.append(contains)
 	
