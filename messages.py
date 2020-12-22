@@ -95,20 +95,19 @@ def log():
 	print('''
 ## log ##
 
-Creates a log file from your search results.
-if no file path is given, it defaults to the current directory.
+Creates a log file from your search results with the name
+passed in.  Include the extension.  If you use the extension
+'md' or 'json', it will generate that kind of file. Otherwise,
+it defaults to plain text.
 
-Alternatively, you can use the shorthand of 'log:t' or 
-'log:true', and it will create a markdown log file for you, 
-in the current directory. In the short form, you can also specify json format, like so:
+You can also use the shorthand of 'log:t' or 
+'log:true', and it will create a markdown log file. In the 
+short form, you can also specify json format, like so:
 
 srch - kind:doc log:json
 
 Example with name only: 
 srch - kind:doc log:logfile.txt
-
-Example using file path:
-srch - kind:doc log:~/Documents/bacon-bits/demoSearch/log.txt
 
 Example using shorthand:
 srch - kind:doc log:t

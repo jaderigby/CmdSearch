@@ -249,18 +249,23 @@ def execute(ARGS):
 				logFile = 'log.json'
 			logPath = logRoot + '/' + logFile
 		else:
-			logFile = log.split('/')[-1]
-			logRoot = log.replace(logFile, '')
-			logRoot = logRoot.replace('cmdsearch-logs/', '')[:-1]
-			helpers.run_command('cd {} && mkdir -p {}'.format(logRoot, 'cmdsearch-logs'), False)
-			logPath = logRoot + 'cmdsearch-logs/' + logFile
+			logPat = re.compile('(.*\.)(md|json)')
+			match = re.search(logPat, log)
+			if match:
+				logFormat = match.group(2)
+			logFile = log
+			logRoot = helpers.run_command_output('pwd', False).replace('\n', '') + '/cmdsearch-logs'
+			helpers.run_command('mkdir -p {}'.format(logRoot), False)
+			logPath = logRoot + '/' + logFile
 		if results:
 			if logFormat == 'md':
 				searchData = '__Date:__ {}\n'.format(currDate)
 				searchData += '__Time:__ {}\n'.format(currTime.strftime("%H:%M:%S"))
 				searchData += '__Search:__ `{}`\n\n'.format(searchQuery)
 				for item in results.splitlines():
-					searchData += '\n* `{}`'.format(item)
+					match = re.search(pat, item)
+					if not match:
+						searchData += '\n* `{}`'.format(item)
 			elif logFormat == 'json':
 				newObj = {}
 				newObj['date'] = '{}'.format(currDate)
@@ -268,7 +273,9 @@ def execute(ARGS):
 				newObj['search'] = searchQuery.replace('\n', '')
 				newObj['searchResults'] = []
 				for item in results.splitlines():
-					newObj['searchResults'].append(item)
+					match = re.search(pat, item)
+					if not match:
+						newObj['searchResults'].append(item)
 				searchData = json.dumps(newObj, indent=4)
 			else:
 				 searchData = results

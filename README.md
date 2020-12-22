@@ -64,7 +64,7 @@ srch - contains:someString dir:~/ h:true
 - __hidden:__ = 't|true', include hidden files
 - __h:__ = 't|true', shortened version of "hidden"
 - __dir:__ = specify the root directory to start searching
-- __log:__ = create a log file of search results
+- __log:__ = 't|md|json', create a log file of search results
 
 
 
