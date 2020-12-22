@@ -155,7 +155,7 @@ def execute(ARGS):
 		if name:
 			termList.append('-g')
 			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
-			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
 			termList.append(sugarized)
 		elif not name and extensionRegex:
 			termList.append('-g')
