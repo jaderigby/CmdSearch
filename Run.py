@@ -133,7 +133,7 @@ def execute(ARGS):
 	elif not contains and hidden:
 		# print("\n-!contains & hidden-")
 		if name and not extensionRegex:
-			print('name & hidden & !kind')
+			# print('name & hidden & !kind')
 			termList.append('-g')
 			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
 			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
