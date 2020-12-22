@@ -29,9 +29,20 @@ def execute(ARGS):
 	# patterns
 	#=========
 
-	fileOnlyPat = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'" ]*'''
-	hiddenFileOnlyPat = '''\/?\.[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*'''
-	hiddenFileSuffixPat = '''[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*'''
+	# fileOnlyPat = '''\/?[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
+	# hiddenFileOnlyPat = '''\/?\.[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
+	# hiddenFileSuffixPat = '''[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
+
+
+
+	primaryPat = '''[\w,.?!;:'"(){{}}[\]<>`~*@#&$%^| +\-]'''
+	fileOnlyPat = '''\/?{}*'''.format(primaryPat)
+	hiddenFileOnlyPat = '''\/?\.{}*'''.format(primaryPat)
+	hiddenFileSuffixPat = '''{}*'''.format(primaryPat)
+
+
+
+
 
 	# uses the GitHub flavor of acceptable markdown extensions
 	kindObj = {}
@@ -66,11 +77,19 @@ def execute(ARGS):
 	extType = key_set(argDict, 'type', False)
 	name = key_set(argDict, 'name', False)
 	contains = key_set(argDict, 'contains', False)
-	hidden = key_set(argDict, 'hidden', '')
-	h = key_set(argDict, 'h', '')
+	if 'h' in argDict:
+		hidden = key_set(argDict, 'h', False)
+	else:
+		hidden = key_set(argDict, 'hidden', False)
 	only = key_set(argDict, 'only', False)
 	dir = key_set(argDict, 'dir', False)
 	log = key_set(argDict, 'log', False)
+
+	# normalize 'true' to short form
+	if hidden == 'true':
+		hidden = 't'
+	if only == 'true':
+		only = 't'
 	
 	cmdList = []
 
@@ -78,26 +97,26 @@ def execute(ARGS):
 	optionList = []
 	suffixList = []
 
-	if not contains:
+	if not contains and not hidden:
+		print("\n-!contains & !hidden-")
 		if not extensionRegex and name:
 			termList.append('-g')
 			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
-			sugarized = '''(({FILE_ONLY_PAT}{NAME}{FILE_ONLY_PAT}\..{{1,15}})|({HIDDEN_FILE_ONLY_PAT}{NAME}{HIDDEN_FILE_SUFFIX_PAT}))'''.format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, HIDDEN_FILE_ONLY_PAT= hiddenFileOnlyPat, HIDDEN_FILE_SUFFIX_PAT= hiddenFileSuffixPat)
+			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*\..{{1,15}}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
 			termList.append(sugarized)
-		
 		elif not name and extensionRegex:
 			termList.append('-g')
 			sugarized = kindObj[extensionRegex]
 			termList.append(sugarized)
-		
 		elif name and extensionRegex:
 			termList.append('-g')
 			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
 			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = '''(({FILE_ONLY_PAT}{NAME}{FILE_ONLY_PAT}{KIND})|({HIDDEN_FILE_ONLY_PAT}{NAME}{HIDDEN_FILE_SUFFIX_PAT}))'''.format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, KIND= kindObj[extensionRegex], HIDDEN_FILE_ONLY_PAT= hiddenFileOnlyPat, HIDDEN_FILE_SUFFIX_PAT= hiddenFileSuffixPat)
+			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
 			termList.append(sugarized)
 	
-	elif contains:
+	elif contains and not hidden:
+		print("\n-contains & !hidden-")
 		if not name and not extensionRegex and contains:
 			termList.append(contains)
 		elif not extensionRegex and name and contains:
@@ -109,25 +128,59 @@ def execute(ARGS):
 			sugarized = kindObj[extensionRegex]
 			termList.append(sugarized)
 			termList.append(contains)
-
 		elif name and extensionRegex and contains:
 			termList.append('-G')
 			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
 			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = '''(({FILE_ONLY_PAT}{NAME}{FILE_ONLY_PAT}{KIND})|({HIDDEN_FILE_ONLY_PAT}{NAME}{HIDDEN_FILE_SUFFIX_PAT}))'''.format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, KIND= kindObj[extensionRegex], HIDDEN_FILE_ONLY_PAT= hiddenFileOnlyPat, HIDDEN_FILE_SUFFIX_PAT= hiddenFileSuffixPat)
+			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
 			termList.append(sugarized)
 			termList.append(contains)
+
+	elif not contains and hidden:
+		print("\n-!contains & hidden-")
+		if name and not extensionRegex:
+			print('name & hidden & !kind')
+			termList.append('-g')
+			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
+			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+			termList.append(sugarized)
+		elif not name and extensionRegex:
+			termList.append('-g')
+			sugarized = kindObj[extensionRegex]
+			termList.append(sugarized)
+		elif name and extensionRegex:
+			print('name & hidden & kind')
+			termList.append('-g')
+			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
+			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
+			termList.append(sugarized)
+
+	elif contains and hidden:
+		print("\n-contains & hidden-")
+		if name:
+			termList.append('-g')
+			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
+			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+			termList.append(sugarized)
+		elif not name and extensionRegex:
+			termList.append('-g')
+			sugarized = kindObj[extensionRegex]
+			termList.append(sugarized)
+		elif name and extensionRegex:
+			termList.append('-g')
+			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
+			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
+			termList.append(sugarized)
 	
 	optionList.append('-o')
 
-	if hidden == 't' or h == 't':
+	if hidden == 't':
 		optionList.append('--hidden')
 
 	if extType:
 		addType = "--" + extType
-	
-	if hidden:
-		optionList.append('--hidden')
 	
 	if only == 't':
 		optionList.append('-l')
@@ -151,8 +204,8 @@ def execute(ARGS):
 
 	cmdList.append('ag')
 
-	if extType:
-		cmdList.append(addType)
+	# if extType:
+	# 	cmdList.append(addType)
 
 	for term in termList:
 		cmdList.append(term)
