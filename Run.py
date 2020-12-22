@@ -114,7 +114,8 @@ def execute(ARGS):
 			termList.append(contains)
 		elif not extensionRegex and name and contains:
 			termList.append('-G')
-			termList.append(name)
+			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*\..{{1,15}}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+			termList.append(sugarized)
 			termList.append(contains)
 		elif not name and extensionRegex and contains:
 			termList.append('-G')
