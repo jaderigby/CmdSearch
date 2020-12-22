@@ -55,6 +55,7 @@ srch - contains:someString dir:~/ h:true
 ## Arguments ##
 
 - __name:__ = string to search (as file name)
+- __dname:__ = string to search (as directory name)
 - __contains:__ = search contents
 - __kind:__ = filter by selected file kind (Options: `srch kind`)
 - __kindx:__ = kind as regex pattern

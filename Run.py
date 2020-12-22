@@ -68,6 +68,7 @@ def execute(ARGS):
 		extensionRegex = 'kindz'
 
 	extType = key_set(argDict, 'type', False)
+	folder = key_set(argDict, 'dname', False)
 	name = key_set(argDict, 'name', False)
 	contains = key_set(argDict, 'contains', False)
 	if 'h' in argDict:
@@ -90,83 +91,89 @@ def execute(ARGS):
 	optionList = []
 	suffixList = []
 
-	if not contains and not hidden:
-		# print("\n-!contains & !hidden-")
-		if not extensionRegex and name:
-			termList.append('-g')
-			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
-			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*\..{{1,15}}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
-			termList.append(sugarized)
-		elif not name and extensionRegex:
-			termList.append('-g')
-			sugarized = kindObj[extensionRegex]
-			termList.append(sugarized)
-		elif name and extensionRegex:
-			termList.append('-g')
-			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
-			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
-			termList.append(sugarized)
+	if folder:
+		termList.append('-g')
+		sugarized = """\/?{}""".format(folder)
+		termList.append(sugarized)
 	
-	elif contains and not hidden:
-		# print("\n-contains & !hidden-")
-		if not name and not extensionRegex and contains:
-			termList.append(contains)
-		elif not extensionRegex and name and contains:
-			termList.append('-G')
-			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*\..{{1,15}}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
-			termList.append(sugarized)
-			termList.append(contains)
-		elif not name and extensionRegex and contains:
-			termList.append('-G')
-			sugarized = kindObj[extensionRegex]
-			termList.append(sugarized)
-			termList.append(contains)
-		elif name and extensionRegex and contains:
-			termList.append('-G')
-			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
-			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
-			termList.append(sugarized)
-			termList.append(contains)
+	else:
+		if not contains and not hidden:
+			# print("\n-!contains & !hidden-")
+			if not extensionRegex and name:
+				termList.append('-g')
+				# sugarized = '''{}.*\.{{1,15}}'''.format(name)
+				sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*\..{{1,15}}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+				termList.append(sugarized)
+			elif not name and extensionRegex:
+				termList.append('-g')
+				sugarized = kindObj[extensionRegex]
+				termList.append(sugarized)
+			elif name and extensionRegex:
+				termList.append('-g')
+				# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+				# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
+				sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
+				termList.append(sugarized)
+		
+		elif contains and not hidden:
+			# print("\n-contains & !hidden-")
+			if not name and not extensionRegex and contains:
+				termList.append(contains)
+			elif not extensionRegex and name and contains:
+				termList.append('-G')
+				sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*\..{{1,15}}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+				termList.append(sugarized)
+				termList.append(contains)
+			elif not name and extensionRegex and contains:
+				termList.append('-G')
+				sugarized = kindObj[extensionRegex]
+				termList.append(sugarized)
+				termList.append(contains)
+			elif name and extensionRegex and contains:
+				termList.append('-G')
+				# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+				# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}[\w.&!@#$%^&*()+{{}}[\]:\"';|<>,?\-`~]*{}'''.format(name, kindObj[extensionRegex])
+				sugarized = """{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
+				termList.append(sugarized)
+				termList.append(contains)
 
-	elif not contains and hidden:
-		# print("\n-!contains & hidden-")
-		if name and not extensionRegex:
-			# print('name & hidden & !kind')
-			termList.append('-g')
-			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
-			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
-			termList.append(sugarized)
-		elif not name and extensionRegex:
-			termList.append('-g')
-			sugarized = kindObj[extensionRegex]
-			termList.append(sugarized)
-		elif name and extensionRegex:
-			# print('name & hidden & kind')
-			termList.append('-g')
-			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
-			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
-			termList.append(sugarized)
+		elif not contains and hidden:
+			# print("\n-!contains & hidden-")
+			if name and not extensionRegex:
+				# print('name & hidden & !kind')
+				termList.append('-g')
+				# sugarized = '''{}.*\.{{1,15}}'''.format(name)
+				sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+				termList.append(sugarized)
+			elif not name and extensionRegex:
+				termList.append('-g')
+				sugarized = kindObj[extensionRegex]
+				termList.append(sugarized)
+			elif name and extensionRegex:
+				# print('name & hidden & kind')
+				termList.append('-g')
+				# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+				# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
+				sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
+				termList.append(sugarized)
 
-	elif contains and hidden:
-		print("\n-contains & hidden-")
-		if name:
-			termList.append('-g')
-			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
-			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
-			termList.append(sugarized)
-		elif not name and extensionRegex:
-			termList.append('-g')
-			sugarized = kindObj[extensionRegex]
-			termList.append(sugarized)
-		elif name and extensionRegex:
-			termList.append('-g')
-			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
-			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
-			sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
-			termList.append(sugarized)
+		elif contains and hidden:
+			print("\n-contains & hidden-")
+			if name:
+				termList.append('-g')
+				# sugarized = '''{}.*\.{{1,15}}'''.format(name)
+				sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
+				termList.append(sugarized)
+			elif not name and extensionRegex:
+				termList.append('-g')
+				sugarized = kindObj[extensionRegex]
+				termList.append(sugarized)
+			elif name and extensionRegex:
+				termList.append('-g')
+				# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
+				# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
+				sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
+				termList.append(sugarized)
 	
 	optionList.append('-o')
 
