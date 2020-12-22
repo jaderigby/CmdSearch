@@ -66,6 +66,23 @@ srch - contains:someString dir:~/ h:true
 - __dir:__ = specify the root directory to start searching
 - __log:__ = 't|md|json', create a log file of search results
 
+#### Example Profile Configuration ####
+
+```
+{
+	"settings" : {
+		"kind" : [
+			{
+				"name" : "angular-c",
+				"pattern" : "controller\\.(js)$",
+				"description" : "finds angular controller js files"
+			}
+		]
+	}
+}
+```
+
+
 
 
 

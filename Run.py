@@ -278,7 +278,7 @@ def execute(ARGS):
 						newObj['searchResults'].append(item)
 				searchData = json.dumps(newObj, indent=4)
 			else:
-				 searchData = results
+				searchData = results
 
 			logPathFormatted = logPath.replace('\n', '')
 			print((bcolors.OKCYAN + '''
