@@ -32,17 +32,10 @@ def execute(ARGS):
 	# fileOnlyPat = '''\/?[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
 	# hiddenFileOnlyPat = '''\/?\.[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
 	# hiddenFileSuffixPat = '''[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
-
-
-
 	primaryPat = '''[\w,.?!;:'"(){{}}[\]<>`~*@#&$%^| +\-]'''
 	fileOnlyPat = '''\/?{}*'''.format(primaryPat)
 	hiddenFileOnlyPat = '''\/?\.{}*'''.format(primaryPat)
 	hiddenFileSuffixPat = '''{}*'''.format(primaryPat)
-
-
-
-
 
 	# uses the GitHub flavor of acceptable markdown extensions
 	kindObj = {}
@@ -98,7 +91,7 @@ def execute(ARGS):
 	suffixList = []
 
 	if not contains and not hidden:
-		print("\n-!contains & !hidden-")
+		# print("\n-!contains & !hidden-")
 		if not extensionRegex and name:
 			termList.append('-g')
 			# sugarized = '''{}.*\.{{1,15}}'''.format(name)
@@ -116,7 +109,7 @@ def execute(ARGS):
 			termList.append(sugarized)
 	
 	elif contains and not hidden:
-		print("\n-contains & !hidden-")
+		# print("\n-contains & !hidden-")
 		if not name and not extensionRegex and contains:
 			termList.append(contains)
 		elif not extensionRegex and name and contains:
@@ -137,7 +130,7 @@ def execute(ARGS):
 			termList.append(contains)
 
 	elif not contains and hidden:
-		print("\n-!contains & hidden-")
+		# print("\n-!contains & hidden-")
 		if name and not extensionRegex:
 			print('name & hidden & !kind')
 			termList.append('-g')
@@ -149,7 +142,7 @@ def execute(ARGS):
 			sugarized = kindObj[extensionRegex]
 			termList.append(sugarized)
 		elif name and extensionRegex:
-			print('name & hidden & kind')
+			# print('name & hidden & kind')
 			termList.append('-g')
 			# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
 			# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
