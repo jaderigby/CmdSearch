@@ -195,6 +195,20 @@ def run_command_output_search(CMD, option = True):
 
 	return result
 
+def decorate(COLOR, STRING):
+	bcolors = {
+		'green': '\033[92m',
+		'yellow': '\033[93m',
+		'red': '\033[91m',
+		'lilac': '\033[95m',
+		'blue': '\033[94m',
+		'cyan': '\033[96m',
+		'bold': '\033[1m',
+		'underline': '\033[4m',
+		'endc': '\033[0m'
+	}
+	return bcolors[COLOR] + STRING + bcolors['endc']
+
 def format_search_query():
 	import sys
 	import re

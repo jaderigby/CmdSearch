@@ -40,7 +40,7 @@ def execute(ARGS):
 	kindObj['kindz'] = ''
 	if settings:
 		if 'kind' in settings:
-			for item in settingsKind:
+			for item in settings['kind']:
 				item = ast.literal_eval(json.dumps(item))
 				kindObj[item['name']] = item['pattern']
 
