@@ -111,6 +111,21 @@ def kabob(NAME):
 def user_input(STRING):
 	return raw_input(STRING)
 
+def decorate(COLOR, STRING):
+	bcolors = {
+		 'lilac' : '\033[95m'
+		,'blue' : '\033[94m'
+		,'cyan' : '\033[96m'
+		,'green' : '\033[92m'
+		,'yellow' : '\033[93m'
+		,'red' : '\033[91m'
+		,'bold' : '\033[1m'
+		,'underline' : '\033[4m'
+		,'endc' : '\033[0m'
+	}
+
+	return bcolors[COLOR] + STRING + bcolors['endc']
+
 # generates a user selection session, where the passed in list is presented as numbered selections; selecting "x" or just hitting enter results in the string "exit" being returned. Any invaild selection is captured and presented with the message "Please select a valid entry"
 def user_selection(DESCRIPTION, LIST):
 	import re

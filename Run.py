@@ -6,17 +6,6 @@ settings = helpers.get_settings()
 def execute(ARGS):
 	argDict = helpers.arguments(ARGS)
 
-	class bcolors:
-		HEADER = '\033[95m'
-		OKBLUE = '\033[94m'
-		OKCYAN = '\033[96m'
-		OKGREEN = '\033[92m'
-		WARNING = '\033[93m'
-		FAIL = '\033[91m'
-		ENDC = '\033[0m'
-		BOLD = '\033[1m'
-		UNDERLINE = '\033[4m'
-
 	def key_set(DICT, KEY, DEFAULT):
 		if KEY in DICT:
 			if DICT[KEY] == 'true':
@@ -49,9 +38,11 @@ def execute(ARGS):
 	kindObj['script'] = "\.(js|tsx|ts|py|json)$"
 	kindObj['kindx'] = ''
 	kindObj['kindz'] = ''
-	for item in settings['kind']:
-		item = ast.literal_eval(json.dumps(item))
-		kindObj[item['name']] = item['pattern']
+	if settings:
+		if 'kind' in settings:
+			for item in settingsKind:
+				item = ast.literal_eval(json.dumps(item))
+				kindObj[item['name']] = item['pattern']
 
 	extensionRegex = key_set(argDict, 'kind', False)
 	extensionPattern = key_set(argDict, 'kindx', False)
@@ -224,7 +215,7 @@ def execute(ARGS):
 	for item in results.splitlines():
 		match = re.search(pat, item)
 		if not match:
-			print(bcolors.OKGREEN + (item) + bcolors.ENDC)
+			print(helpers.decorate('green', item))
 
 	if results == '':
 		msg.no_results()
@@ -281,9 +272,9 @@ def execute(ARGS):
 				searchData = results
 
 			logPathFormatted = logPath.replace('\n', '')
-			print((bcolors.OKCYAN + '''
+			print(helpers.decorate('cyan', '''
 LOG: {}
-''' + bcolors.ENDC).format(logPathFormatted))
+'''.format(logPathFormatted)))
 			helpers.write_file(logPathFormatted, searchData)
 
 	msg.done()
