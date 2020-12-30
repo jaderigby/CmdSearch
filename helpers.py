@@ -157,6 +157,10 @@ def profile():
 		write_file(utilDir + '/profiles/profile.py', snippet)
 		print("\n[ Process Completed ]\n")
 
+
+# custom helpers start here
+# =========================
+
 def run_command_output_search(CMD, option = True):
 	import subprocess
 	shellStatus = True

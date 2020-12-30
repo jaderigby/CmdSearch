@@ -151,20 +151,23 @@ def execute(ARGS):
 		elif contains and hidden:
 			print("\n-contains & hidden-")
 			if name:
-				termList.append('-g')
+				termList.append('-G')
 				# sugarized = '''{}.*\.{{1,15}}'''.format(name)
 				sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat)
 				termList.append(sugarized)
+				termList.append(contains)
 			elif not name and extensionRegex:
-				termList.append('-g')
+				termList.append('-G')
 				sugarized = kindObj[extensionRegex]
 				termList.append(sugarized)
+				termList.append(contains)
 			elif name and extensionRegex:
-				termList.append('-g')
+				termList.append('-G')
 				# sugarized = '''{}.*{}'''.format(name, kindObj[extensionRegex])
 				# sugarized = '''\/?[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}[\w.&!@#$%^&*()+{{}}[\]:;|<>,?\-`~'"]*{}'''.format(name, kindObj[extensionRegex])
 				sugarized = """\.{FILE_ONLY_PAT}{NAME}{PRIMARY_PAT}*{KIND}""".format(FILE_ONLY_PAT= fileOnlyPat, NAME= name, PRIMARY_PAT= primaryPat, KIND= kindObj[extensionRegex])
 				termList.append(sugarized)
+				termList.append(contains)
 	
 	optionList.append('-o')
 
