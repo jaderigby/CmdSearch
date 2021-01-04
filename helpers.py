@@ -53,11 +53,8 @@ def run_command_output(CMD, option = True):
 	if option:
 		print('\n============== Outputting Command: {}\n'.format(CMD))
 	result = False
-	shellStatus = True
-	if isinstance(CMD, list):
-		shellStatus = False
 	if CMD != None:
-		process = subprocess.Popen(CMD, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=shellStatus)
+		process = subprocess.Popen(CMD, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 		out, err = process.communicate()
 
 		if err:
@@ -156,7 +153,7 @@ def run_command_output_search(CMD, option = True):
 			print(err)
 		
 		else:
-			result = out.decode('utf-8')
+			result = out
 
 	return result
 
@@ -171,3 +168,4 @@ def format_search_query():
 	if not match:
 		newStr += ' dir:{}'.format(run_command_output('pwd', False))
 	return newStr
+		
