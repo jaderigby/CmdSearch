@@ -153,7 +153,7 @@ def run_command_output_search(CMD, option = True):
 			print(err)
 		
 		else:
-			result = out
+			result = out.decode('utf-8')
 
 	return result
 
