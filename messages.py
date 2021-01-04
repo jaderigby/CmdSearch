@@ -1,6 +1,6 @@
 import helpers, json
 
-actionList = json.loads(helpers.read_file('{}/{}'.format(helpers.self_path(), 'action-list.json')))
+actionList = json.loads(helpers.read_file('{}/{}'.format(helpers.path('util'), 'action-list.json')))
 
 def preamble():
 	print('''
@@ -37,22 +37,24 @@ def kinds(ADD_LIST=[]):
 	for item in kindList:
 		kindString += item + ' | '
 	kindStringFormatted = '[ {} ]'.format(kindString[:-3])
-	print'''
+	descMsg = '''
 ## kind ##
 
 Allows you to search by kind/category of file:
 
 {}
 '''.format(kindStringFormatted)
+	print(descMsg)
 
 def kindx():
-	print(r'''
+	descMsg = r'''
 ## kindx ##
 
 Allows you to search by a regex pattern, like:
 
 kindx:'\.(ts|js)$'
-''')
+'''
+	print(descMsg)
 
 def kindz():
 	print('''
@@ -84,12 +86,12 @@ Arguments:
 ''')
 
 def types():
-	print'''
+	print('''
 Search by a configured set of file types. For example:
 
 [ css | html | js | tsx ]
 
-'''
+''')
 
 def log():
 	print('''

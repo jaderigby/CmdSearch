@@ -182,12 +182,12 @@ def execute(ARGS):
 		optionList.append('cmdsearch-logs')
 
 	if dir == '~/':
-		dir = dir.replace('~/', helpers.root())
+		dir = dir.replace('~/', helpers.path('user'))
 	elif dir == '~':
-		dir = dir.replace('~', helpers.root())
+		dir = dir.replace('~', helpers.path('user'))
 	elif not dir:
 		dir = helpers.run_command_output('pwd', False)[:-1] + '/'
-	dir = re.sub('~/', helpers.root(), dir)
+	dir = re.sub('~/', helpers.path('user'), dir)
 	suffixList.append(dir)
 	
 	#=======================
