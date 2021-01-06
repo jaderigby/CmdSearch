@@ -1,4 +1,4 @@
-import sys, addAction, helpers
+import sys, helpers, sizzle
 import messages as msg
 import Run
 import Kind
@@ -23,10 +23,13 @@ if action == None:
 	msg.statusMessage()
 
 elif action == '-action':
-	addAction.execute(args)
+	sizzle.do_action(args)
 
 elif action == '-profile':
-	helpers.profile()
+	sizzle.profile()
+
+elif action == '-helpers':
+	sizzle.helpers()
 
 elif action == "-":
 	Run.execute(args)
