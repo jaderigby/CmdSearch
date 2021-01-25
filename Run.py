@@ -255,13 +255,13 @@ def execute(ARGS):
 	if dirsOnly:
 		if 'cmd' in argDict:
 			if argDict['cmd'] == 'open':
-				if len(resultsFormatted) == 1:
+				if len(resultsFormattedUnique) == 1:
 					helpers.run_command('open {}'.format(resultsFormattedUnique[0]))
 				elif len(resultsFormattedUnique) > 0:
 					selection = helpers.user_selection("Selection: ", resultsFormattedUnique)
-					helpers.run_command('open {}'.format(resultsFormattedUnique[selection - 1]))
+					if selection != 'exit':
+						helpers.run_command('open {}'.format(resultsFormattedUnique[selection - 1]))
 
-	
 	if log:
 		from datetime import date, datetime
 		
