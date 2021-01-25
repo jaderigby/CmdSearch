@@ -177,8 +177,14 @@ def execute(ARGS):
 	if extType:
 		addType = "--" + extType
 	
-	if only == 't':
-		optionList.append('-l')
+	dirsOnly = False
+
+	if folder and not name and not contains:
+		if only == 't':
+			dirsOnly = True
+	else:
+		if only == 't':
+			optionList.append('-l')
 	
 	if log:
 		optionList.append('--ignore-dir')
@@ -214,14 +220,47 @@ def execute(ARGS):
 
 	results = helpers.run_command_output_search(cmdList)
 
-	pat = re.compile("ERR")
-	for item in results.splitlines():
-		match = re.search(pat, item)
-		if not match:
+	#===================
+	# Output the results
+	#===================
+
+	resultsFormatted = []
+	resultsFormattedUnique = []
+	if dirsOnly:
+		pat = re.compile("ERR")
+		for item in results.splitlines():
+			match = re.search(pat, item)
+			item = re.sub(fileOnlyPat + '$', '', item)
+			if not match:
+				resultsFormatted.append(item)
+		
+		resultsFormattedUnique = list(set(resultsFormatted))
+		
+		for item in resultsFormattedUnique:
 			print(helpers.decorate('green', item))
 
-	if results == '':
-		msg.no_results()
+		if len(resultsFormatted) == 0:
+			msg.no_results()
+
+	else:
+		pat = re.compile("ERR")
+		for item in results.splitlines():
+			match = re.search(pat, item)
+			if not match:
+				print(helpers.decorate('green', item))
+
+		if results == '':
+			msg.no_results()
+	
+	if dirsOnly:
+		if 'cmd' in argDict:
+			if argDict['cmd'] == 'open':
+				if len(resultsFormatted) == 1:
+					helpers.run_command('open {}'.format(resultsFormattedUnique[0]))
+				elif len(resultsFormattedUnique) > 0:
+					selection = helpers.user_selection("Selection: ", resultsFormattedUnique)
+					helpers.run_command('open {}'.format(resultsFormattedUnique[selection - 1]))
+
 	
 	if log:
 		from datetime import date, datetime
