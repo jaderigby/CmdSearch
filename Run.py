@@ -195,21 +195,19 @@ def execute(ARGS):
 		optionList.append('--ignore-dir')
 		optionList.append('cmdsearch-logs')
 
-
-	if dir == '~/':
-		dir = dir.replace('~/', helpers.path('user'))
-		dir = re.sub('~/', helpers.path('user'), dir)
-	elif dir == '~':
-		dir = dir.replace('~', helpers.path('user'))
-		dir = re.sub('~/', helpers.path('user'), dir)
-	elif dir:
+	if dir:
+		# capture first character for match later, after normalization below
 		firstChar = dir[1:]
+
+		# normalize instances where tilde for user path is used
+		dir = dir.replace('~/', helpers.path('user'))
+		dir = dir.replace('~', helpers.path('user'))
+
 		backTrackPat = re.compile('../')
 		match = re.findall(backTrackPat, dir)
 		if not firstChar == '/' and match:
 			for item in range(len(match)):
 				dir = helpers.run_command_output('cd {} && pwd'.format(dir), False)[:-1] + '/'
-				dir = re.sub('~/', helpers.path('user'), dir)
 	else:
 		currentLocation = helpers.run_command_output('pwd', False)[:-1] + '/'
 		dir = currentLocation
