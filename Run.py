@@ -84,7 +84,7 @@ def execute(ARGS):
 
 	if folder:
 		termList.append('-g')
-		sugarized = """\/?{}""".format(folder)
+		sugarized = """\/?{PATTERN}*{FOLDER}{PATTERN}*\/""".format(PATTERN = primaryPat, FOLDER = folder)
 		termList.append(sugarized)
 	
 	else:
