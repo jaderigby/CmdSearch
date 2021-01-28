@@ -190,7 +190,6 @@ def execute(ARGS):
 		optionList.append('--ignore-dir')
 		optionList.append('cmdsearch-logs')
 
-	firstChar = dir[1:]
 
 	if dir == '~/':
 		dir = dir.replace('~/', helpers.path('user'))
@@ -198,15 +197,17 @@ def execute(ARGS):
 	elif dir == '~':
 		dir = dir.replace('~', helpers.path('user'))
 		dir = re.sub('~/', helpers.path('user'), dir)
-	elif firstChar == '/':
-		dir = helpers.run_command_output('pwd', False)[:-1] + '/'
-		dir = re.sub('~/', helpers.path('user'), dir)
+	elif dir:
+		firstChar = dir[1:]
+		backTrackPat = re.compile('../')
+		match = re.findall(backTrackPat, dir)
+		if not firstChar == '/' and match:
+			for item in range(len(match)):
+				dir = helpers.run_command_output('cd {} && pwd'.format(dir), False)[:-1] + '/'
+				dir = re.sub('~/', helpers.path('user'), dir)
 	else:
 		currentLocation = helpers.run_command_output('pwd', False)[:-1] + '/'
-		# print(currentLocation)
-		# print(dir)
-		# print("")
-		dir = currentLocation + dir
+		dir = currentLocation
 
 	suffixList.append(dir)
 	
