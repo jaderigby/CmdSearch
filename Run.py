@@ -68,6 +68,9 @@ def execute(ARGS):
 		hidden = key_set(argDict, 'hidden', False)
 	only = key_set(argDict, 'only', False)
 	dir = key_set(argDict, 'from', False)
+	cmdGiven = key_set(argDict, 'cmd', False)
+	if not cmdGiven:
+		cmdGiven = key_set(argDict, 'c', False)
 	log = key_set(argDict, 'log', False)
 
 	# normalize 'true' to short form
@@ -182,6 +185,8 @@ def execute(ARGS):
 	if folder and not name and not contains:
 		if only == 't':
 			dirsOnly = True
+		elif cmdGiven:
+			dirsOnly = True
 	else:
 		if only == 't':
 			optionList.append('-l')
@@ -265,13 +270,13 @@ def execute(ARGS):
 			msg.no_results()
 	
 	if dirsOnly:
-		if 'cmd' in argDict:
+		if cmdGiven:
 			if len(resultsFormattedUnique) == 1:
-				helpers.run_command('{} {}'.format(argDict['cmd'], resultsFormattedUnique[0]))
+				helpers.run_command('{} {}'.format(cmdGiven, resultsFormattedUnique[0]))
 			elif len(resultsFormattedUnique) > 0:
 				selection = helpers.user_selection("Selection: ", resultsFormattedUnique)
 				if selection != 'exit':
-					helpers.run_command('{} {}'.format(argDict['cmd'], resultsFormattedUnique[selection - 1]))
+					helpers.run_command('{} {}'.format(cmdGiven, resultsFormattedUnique[selection - 1]))
 
 	if log:
 		from datetime import date, datetime
