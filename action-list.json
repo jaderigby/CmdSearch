@@ -4,7 +4,7 @@
     "actions": [
         {
             "name": "-",
-            "description": "accepts the following parameters:\n\nname:\t\tsearch by file name\ndname:\t\tsearch by directory name\ncontains:\tsearch by contents rather than by name\n\nkind:\t\tfilter by file kind. For further details, do 'srch kind'\nkindx:\t\tlike regular 'kind', but allows you to match by regex pattern, instead\nkindz:\t\tpass in a list of file types seperated by a comma (no spaces): 'css,html,js'\n\nonly:\t\t't|true', short for 'file only', shows just the files; no lines\nhidden:\t\t't|true' to include hidden files\nh:\t\t't|true', shortened version of 'hidden'\ndir:\t\tdirectory to search; leave the directory off to search current directory\nlog:\t\tcreates a search log file\n"
+            "description": "accepts the following parameters:\n\nname:\t\tsearch by file name\ndir:\t\tsearch by directory name\ncontains:\tsearch by contents\n\nkind:\t\tfilter by file kind. For further details, do 'srch kind'\nkindx:\t\tlike regular 'kind', but allows you to match by regex pattern, instead\nkindz:\t\tpass in a list of file types seperated by a comma (no spaces): 'css,html,js'\n\nonly:\t\t't|true', when used in combination with 'contains', shows only the files,\n\t\tnot the line results; when used in combination with 'dir', shows only\n\t\tthe directories, not the files\ncmd:\t\t'open|code|atom', open location in Finder, with VSCode, with Atom, etc\nhidden:\t\t't|true' to include hidden files\nh:\t\t't|true', shortened version of 'hidden'\nfrom:\t\tdirectory to search; leave the directory off to search current directory\nlog:\t\tcreates a search log file\n"
         },
         {
             "name": "args",

@@ -76,12 +76,14 @@ def args():
 Arguments:
 
 - name \t\tsearch files by name (regex pattern). Use double backslash "\\" as escape character
+- dir \t\tsearch by directory, instead of by file name
 - contains \tsearch for matching search string inside files
 - kind \t\tfilter matches by kind. 
-- only \t\tshort for "file only", this removes line matches on "contains"
+- only \t\twhen used in combination with 'contains', shows only the files, not the line results;\n\t\twhen used in combination with 'dir', shows only the directories, not the files
+- cmd \t\twhen using 'dir' in combination with 'only:t', 'cmd' allows you to open the location\n\t\tin Mac Finder, or open location using 'code' or 'atom', etc.\n\t\tSo, for example: 'srch - dir:foo only:t cmd:open'
 - hidden \tinclude hidden files
 - h \t\tshort version of "hidden"
-- dir \t\tspecify directory to search. When argument is absent, search starts at current directory
+- from \t\tspecify directory to search. When argument is absent, search starts at current directory
 - log \t\tcreate a log from your search results.  Full path required.
 ''')
 

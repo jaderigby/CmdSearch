@@ -59,7 +59,7 @@ def execute(ARGS):
 		extensionRegex = 'kindz'
 
 	extType = key_set(argDict, 'type', False)
-	folder = key_set(argDict, 'dname', False)
+	folder = key_set(argDict, 'dir', False)
 	name = key_set(argDict, 'name', False)
 	contains = key_set(argDict, 'contains', False)
 	if 'h' in argDict:
@@ -67,7 +67,7 @@ def execute(ARGS):
 	else:
 		hidden = key_set(argDict, 'hidden', False)
 	only = key_set(argDict, 'only', False)
-	dir = key_set(argDict, 'dir', False)
+	dir = key_set(argDict, 'from', False)
 	log = key_set(argDict, 'log', False)
 
 	# normalize 'true' to short form
@@ -190,13 +190,24 @@ def execute(ARGS):
 		optionList.append('--ignore-dir')
 		optionList.append('cmdsearch-logs')
 
+	firstChar = dir[1:]
+
 	if dir == '~/':
 		dir = dir.replace('~/', helpers.path('user'))
+		dir = re.sub('~/', helpers.path('user'), dir)
 	elif dir == '~':
 		dir = dir.replace('~', helpers.path('user'))
-	elif not dir:
+		dir = re.sub('~/', helpers.path('user'), dir)
+	elif firstChar == '/':
 		dir = helpers.run_command_output('pwd', False)[:-1] + '/'
-	dir = re.sub('~/', helpers.path('user'), dir)
+		dir = re.sub('~/', helpers.path('user'), dir)
+	else:
+		currentLocation = helpers.run_command_output('pwd', False)[:-1] + '/'
+		# print(currentLocation)
+		# print(dir)
+		# print("")
+		dir = currentLocation + dir
+
 	suffixList.append(dir)
 	
 	#=======================
@@ -254,13 +265,12 @@ def execute(ARGS):
 	
 	if dirsOnly:
 		if 'cmd' in argDict:
-			if argDict['cmd'] == 'open':
-				if len(resultsFormattedUnique) == 1:
-					helpers.run_command('open {}'.format(resultsFormattedUnique[0]))
-				elif len(resultsFormattedUnique) > 0:
-					selection = helpers.user_selection("Selection: ", resultsFormattedUnique)
-					if selection != 'exit':
-						helpers.run_command('open {}'.format(resultsFormattedUnique[selection - 1]))
+			if len(resultsFormattedUnique) == 1:
+				helpers.run_command('{} {}'.format(argDict['cmd'], resultsFormattedUnique[0]))
+			elif len(resultsFormattedUnique) > 0:
+				selection = helpers.user_selection("Selection: ", resultsFormattedUnique)
+				if selection != 'exit':
+					helpers.run_command('{} {}'.format(argDict['cmd'], resultsFormattedUnique[selection - 1]))
 
 	if log:
 		from datetime import date, datetime
