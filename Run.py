@@ -60,7 +60,12 @@ def execute(ARGS):
 
 	extType = key_set(argDict, 'type', False)
 	folder = key_set(argDict, 'dir', False)
+
+	# assign either 'name' or 'file' as name
 	name = key_set(argDict, 'name', False)
+	if not name:
+		name = key_set(argDict, 'file', False)
+
 	contains = key_set(argDict, 'contains', False)
 	if 'h' in argDict:
 		hidden = key_set(argDict, 'h', False)
@@ -86,9 +91,24 @@ def execute(ARGS):
 	suffixList = []
 
 	if folder:
-		termList.append('-g')
-		sugarized = """\/?{PATTERN}*{FOLDER}{PATTERN}*\/""".format(PATTERN = primaryPat, FOLDER = folder)
-		termList.append(sugarized)
+		if not contains and not name:
+			termList.append('-g')
+			sugarized = """\/?{PATTERN}*{FOLDER}{PATTERN}*\/""".format(PATTERN = primaryPat, FOLDER = folder)
+			termList.append(sugarized)
+		elif not contains and name:
+			termList.append('-g')
+			sugarized = """\/?{PATTERN}*{FOLDER}{PATTERN}*\/{FILE_ONLY_PAT}{NAME}{PATTERN}*\..{{1,15}}""".format(PATTERN = primaryPat, FOLDER = folder, FILE_ONLY_PAT= fileOnlyPat, NAME= name)
+			termList.append(sugarized)
+		elif contains and not name:
+			termList.append('-G')
+			sugarized = """\/?{PATTERN}*{FOLDER}{PATTERN}*\/""".format(PATTERN = primaryPat, FOLDER = folder)
+			termList.append(sugarized)
+			termList.append(contains)
+		elif contains and name:
+			termList.append('-G')
+			sugarized = """\/?{PATTERN}*{FOLDER}{PATTERN}*\/{FILE_ONLY_PAT}{NAME}{PATTERN}*\..{{1,15}}""".format(PATTERN = primaryPat, FOLDER = folder, FILE_ONLY_PAT= fileOnlyPat, NAME= name)
+			termList.append(sugarized)
+			termList.append(contains)
 	
 	else:
 		if not contains and not hidden:
