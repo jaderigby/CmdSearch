@@ -18,9 +18,6 @@ def execute(ARGS):
 	# patterns
 	#=========
 
-	# fileOnlyPat = '''\/?[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
-	# hiddenFileOnlyPat = '''\/?\.[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
-	# hiddenFileSuffixPat = '''[\w.&!@#$%^*()+{{}}[\]:;|<>,?\-`~'" ]*'''
 	primaryPat = '''[\w,.?!;:'"(){{}}[\]<>`~*@#&$%^| +\-]'''
 	fileOnlyPat = '''\/?{}*'''.format(primaryPat)
 	hiddenFileOnlyPat = '''\/?\.{}*'''.format(primaryPat)
